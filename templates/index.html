@@ -163,7 +163,159 @@ src="{{ url_for('static', filename='images/logo4.jpg.jpeg') }}"
 class="zoomable"  
 alt="Logo Creation Event Photo 4"  
 >  
-</div>  </div>  </div>  </div>  </section>  <!-- FREELANCERS -->  <section class="section freelancers" id="freelancers">  <div class="section-heading reveal">  <p>FREELANCER SHOWCASE</p>  <h2>  
+</div>  </div>  </div>  </div>  </section> <!-- NEWS & UPDATES -->
+<section class="section news-section" id="news">
+  <div class="section-title">
+    <span>Stay Updated</span>
+    <h2>FREEVERSE News & Updates</h2>
+    <p>Latest announcements, achievements and activities from our club.</p>
+  </div>
+
+  <div class="news-filters">
+    <button class="news-filter active" onclick="filterNews('all',this)">All</button>
+    <button class="news-filter" onclick="filterNews('announcement',this)">Announcements</button>
+    <button class="news-filter" onclick="filterNews('event',this)">Events</button>
+    <button class="news-filter" onclick="filterNews('achievement',this)">Achievements</button>
+    <button class="news-filter" onclick="filterNews('spotlight',this)">Student Spotlight</button>
+  </div>
+
+  <div class="news-grid" id="newsGrid"></div>
+</section> <!-- COORDINATOR LOGIN -->
+<section class="section coordinator-login-section" id="coordinator-login">
+  <div class="section-title">
+    <span>Authorized Access</span>
+    <h2>Coordinator Login</h2>
+    <p>Authorized FREEVERSE coordinators can sign in to manage club updates.</p>
+  </div>
+
+  <div class="coordinator-login-card">
+
+    <div class="login-icon">🔐</div>
+
+    <h3>FREEVERSE Coordinator</h3>
+    <p class="login-info">
+      Sign in with your authorized coordinator account.
+    </p>
+
+    <form id="coordinatorLoginForm">
+
+      <div class="form-group">
+        <label for="coordinatorEmail">Email Address</label>
+        <input
+          type="email"
+          id="coordinatorEmail"
+          placeholder="Enter coordinator email"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="coordinatorPassword">Password</label>
+        <input
+          type="password"
+          id="coordinatorPassword"
+          placeholder="Enter password"
+          required
+        >
+      </div>
+
+      <button type="submit" class="coordinator-login-btn">
+        Sign In as Coordinator
+      </button>
+
+      <div id="coordinatorLoginMessage"
+           class="coordinator-login-message">
+      </div>
+
+    </form>
+
+  </div>
+</section> <!-- COORDINATOR POST PANEL -->
+<section class="section coordinator-post-section" id="coordinator-post">
+  <div class="section-title">
+    <span>Club Management</span>
+    <h2>Coordinator Post Panel</h2>
+    <p>Manage announcements, events and important FREEVERSE updates.</p>
+  </div>
+
+  <div class="post-panel">
+    <div class="post-panel-header">
+      <div>
+        <h3>Create a Club Update</h3>
+        <p>Only authorized coordinators should use this panel.</p>
+      </div>
+      <span class="admin-badge">Coordinator</span>
+    </div>
+
+    <form id="newsPostForm">
+
+      <div class="post-form-grid">
+
+        <div class="form-group">
+          <label for="postTitle">Post Title</label>
+          <input
+            type="text"
+            id="postTitle"
+            placeholder="Enter update title"
+            required
+          >
+        </div>
+        <div class="form-group post-image-group">
+  <label for="postImage">Event Poster / Photo</label>
+
+  <div class="image-upload-box">
+    <input
+      type="file"
+      id="postImage"
+      accept="image/png,image/jpeg,image/jpg,image/webp"
+    >
+
+    <div class="upload-icon">📷</div>
+
+    <strong>Upload Poster or Photo</strong>
+
+    <span>PNG, JPG or WEBP • Recommended for event posters</span>
+  </div>
+
+  <div id="imagePreview" class="image-preview"></div>
+</div>
+
+        <div class="form-group">
+          <label for="postType">Category</label>
+          <select id="postType" required>
+            <option value="">Select Category</option>
+            <option value="announcement">Announcement</option>
+            <option value="event">Event</option>
+            <option value="achievement">Achievement</option>
+            <option value="spotlight">Student Spotlight</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label for="postDescription">Description</label>
+        <textarea
+          id="postDescription"
+          rows="5"
+          placeholder="Write your FREEVERSE update..."
+          required
+        ></textarea>
+      </div>
+
+      <div class="post-form-actions">
+        <button type="submit" class="news-read">
+          Publish Update
+        </button>
+      </div>
+
+      <div id="postSuccess" class="post-success">
+        ✓ Update published successfully!
+      </div>
+
+    </form>
+  </div>
+</section> <!-- FREELANCERS -->  <section class="section freelancers" id="freelancers">  <div class="section-heading reveal">  <p>FREELANCER SHOWCASE</p>  <h2>  
 Student  
 <span>Freelancers.</span>  
 </h2>  </div>  <p class="section-intro reveal">  
@@ -443,6 +595,206 @@ Demo showcase profile for the Freeverse website.
 </p>
 
 </div>
+
+</section><!-- STUDENT FREELANCER REGISTRATION -->
+<section class="section freelancer-register-section" id="freelancer-register">
+
+  <div class="section-title">
+    <span>Join the Freelancer Network</span>
+    <h2>Create Your Freelancer Profile</h2>
+    <p>
+      Students can submit their skills, projects and portfolio.
+      Profiles will be reviewed by FREEVERSE coordinators before publishing.
+    </p>
+  </div>
+
+  <div class="freelancer-register-card">
+
+    <div class="freelancer-register-header">
+      <div class="register-icon">💼</div>
+
+      <div>
+        <h3>Student Freelancer Registration</h3>
+        <p>
+          Showcase your skills and projects through FREEVERSE.
+        </p>
+      </div>
+    </div>
+
+    <form id="freelancerRegisterForm">
+
+      <div class="freelancer-form-grid">
+
+        <div class="form-group">
+          <label for="freelancerName">
+            Student Name
+          </label>
+
+          <input
+            type="text"
+            id="freelancerName"
+            placeholder="Enter your full name"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="freelancerYear">
+            Year
+          </label>
+
+          <select id="freelancerYear" required>
+            <option value="">Select Year</option>
+            <option value="1st Year">1st Year</option>
+            <option value="2nd Year">2nd Year</option>
+            <option value="3rd Year">3rd Year</option>
+            <option value="4th Year">4th Year</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="freelancerDepartment">
+            Department
+          </label>
+
+          <input
+            type="text"
+            id="freelancerDepartment"
+            placeholder="Example: CSE (AI&ML)"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="freelancerRole">
+            Freelancer Role
+          </label>
+
+          <select id="freelancerRole" required>
+            <option value="">Select Role</option>
+            <option value="Web Developer">Web Developer</option>
+            <option value="UI/UX Designer">UI/UX Designer</option>
+            <option value="Graphic Designer">Graphic Designer</option>
+            <option value="Video Editor">Video Editor</option>
+            <option value="AI/ML Developer">AI/ML Developer</option>
+            <option value="Software Developer">Software Developer</option>
+            <option value="Content Creator">Content Creator</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="freelancerSkills">
+          Skills
+        </label>
+
+        <input
+          type="text"
+          id="freelancerSkills"
+          placeholder="Example: HTML, CSS, JavaScript, Python"
+          required
+        >
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="freelancerProjects">
+          Projects
+        </label>
+
+        <textarea
+          id="freelancerProjects"
+          rows="4"
+          placeholder="Describe your projects..."
+          required
+        ></textarea>
+
+      </div>
+
+      <div class="freelancer-form-grid">
+
+        <div class="form-group">
+
+          <label for="freelancerEmail">
+            Email
+          </label>
+
+          <input
+            type="email"
+            id="freelancerEmail"
+            placeholder="yourname@example.com"
+            required
+          >
+
+        </div>
+
+        <div class="form-group">
+
+          <label for="freelancerLinkedin">
+            LinkedIn Profile
+          </label>
+
+          <input
+            type="url"
+            id="freelancerLinkedin"
+            placeholder="https://linkedin.com/in/yourname"
+          >
+
+        </div>
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="freelancerPortfolio">
+          Portfolio Website
+        </label>
+
+        <input
+          type="url"
+          id="freelancerPortfolio"
+          placeholder="https://yourportfolio.com"
+        >
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="freelancerImage">
+          Profile Photo
+        </label>
+
+        <input
+          type="file"
+          id="freelancerImage"
+          accept="image/png,image/jpeg,image/jpg,image/webp"
+        >
+
+        <small>
+          JPG, PNG or WEBP
+        </small>
+
+      </div>
+
+      <button
+        type="submit"
+        class="freelancer-submit-btn"
+      >
+        Submit Freelancer Profile
+      </button>
+
+      <div
+        id="freelancerRegisterMessage"
+        class="freelancer-register-message"
+      ></div>
+
+    </form>
+
+  </div>
 
 </section>
 <!-- FREELANCE OPPORTUNITIES -->
@@ -746,5 +1098,150 @@ aria-label="Next photo"
 
 </div>  <!-- TOAST -->  <div class="toast" id="toast">  <div class="toast-icon">✓</div>  <span id="toastMessage"></span>
 
-</div>  <script src="{{ url_for('static', filename='script.js') }}"></script>  </body>  
+</div>  <script src="{{ url_for('static', filename='script.js') }}"></script> <!-- EDIT NEWS MODAL -->
+<div id="editNewsModal" class="edit-news-modal">
+
+  <div class="edit-news-box">
+
+    <button
+      type="button"
+      class="edit-news-close"
+      onclick="closeEditNewsModal()"
+    >
+      ×
+    </button>
+
+    <div class="edit-news-header">
+      <span>Edit Update</span>
+      <h2>Edit FREEVERSE News</h2>
+      <p>Update the post details and replace the poster if needed.</p>
+    </div>
+
+    <form id="editNewsForm">
+
+      <input
+        type="hidden"
+        id="editNewsId"
+      >
+
+      <div class="form-group">
+
+        <label for="editPostTitle">
+          Post Title
+        </label>
+
+        <input
+          type="text"
+          id="editPostTitle"
+          required
+        >
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="editPostType">
+          Category
+        </label>
+
+        <select
+          id="editPostType"
+          required
+        >
+
+          <option value="announcement">
+            Announcement
+          </option>
+
+          <option value="event">
+            Event
+          </option>
+
+          <option value="achievement">
+            Achievement
+          </option>
+
+          <option value="spotlight">
+            Student Spotlight
+          </option>
+
+        </select>
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="editPostDescription">
+          Description
+        </label>
+
+        <textarea
+          id="editPostDescription"
+          rows="5"
+          required
+        ></textarea>
+
+      </div>
+
+      <div class="form-group">
+
+        <label>
+          Current Poster / Photo
+        </label>
+
+        <div
+          id="editCurrentImage"
+          class="edit-current-image"
+        ></div>
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="editPostImage">
+          Replace Poster / Photo
+        </label>
+
+        <input
+          type="file"
+          id="editPostImage"
+          accept="image/png,image/jpeg,image/jpg,image/webp"
+        >
+
+        <div
+          id="editImagePreview"
+          class="edit-image-preview"
+        ></div>
+
+      </div>
+
+      <div class="edit-news-actions">
+
+        <button
+          type="button"
+          class="edit-cancel-btn"
+          onclick="closeEditNewsModal()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="edit-save-btn"
+        >
+          Save Changes
+        </button>
+
+      </div>
+
+      <div
+        id="editNewsMessage"
+        class="edit-news-message"
+      ></div>
+
+    </form>
+
+  </div>
+
+</div> </body>  
 </html>

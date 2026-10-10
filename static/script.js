@@ -2096,3 +2096,1111 @@ window.showOpportunity=showOpportunity;
 window.selectReadiness=selectReadiness;
 window.nextReadinessQuestion=nextReadinessQuestion;
 window.resetReadiness=resetReadiness;
+// ===== FREEVERSE NEWS & UPDATES =====
+const freeverseNews=[
+  {
+    type:"announcement",
+    title:"FREEVERSE Workshop Registration Open",
+    date:"September 2026",
+    icon:"🎓",
+    description:"Registration information for upcoming FREEVERSE workshops and learning sessions will be shared here.",
+    author:"FREEVERSE Club"
+  },
+  {
+    type:"event",
+    title:"FREEVERSE Club Activities",
+    date:"September 2026",
+    icon:"🎯",
+    description:"Stay updated about technical and non-technical activities organized by the FREEVERSE Club.",
+    author:"FREEVERSE Club"
+  },
+  {
+    type:"achievement",
+    title:"Student Achievements",
+    date:"September 2026",
+    icon:"🏆",
+    description:"This space will highlight achievements, competitions, projects and other accomplishments of FREEVERSE students.",
+    author:"FREEVERSE Club"
+  },
+  {
+    type:"spotlight",
+    title:"Student Spotlight",
+    date:"September 2026",
+    icon:"🌟",
+    description:"Meet and celebrate students who actively contribute to FREEVERSE activities, projects and events.",
+    author:"FREEVERSE Club"
+  },
+  {
+    type:"event",
+    title:"Hands-on Learning Session",
+    date:"September 2026",
+    icon:"💡",
+    description:"Information about practical learning sessions, workshops and skill-building activities will appear here.",
+    author:"FREEVERSE Club"
+  },
+  {
+    type:"announcement",
+    title:"FREEVERSE Updates",
+    date:"September 2026",
+    icon:"📢",
+    description:"Follow this section for the latest announcements, opportunities and important updates from the club.",
+    author:"FREEVERSE Club"
+  }
+];
+
+function renderNews(list=freeverseNews){
+
+  const grid=document.getElementById("newsGrid");
+
+  if(!grid)return;
+
+  if(!list.length){
+
+    grid.innerHTML=
+      '<div class="news-empty">No updates available in this category.</div>';
+
+    return;
+  }
+
+  grid.innerHTML=list.map(item=>`
+
+    <article class="news-card">
+
+      ${
+        item.image
+        ?
+        `
+        <div class="news-image">
+          <img
+            src="/static/${item.image}"
+            alt="${item.title}"
+          >
+        </div>
+        `
+        :
+        `
+        <div class="news-icon">
+          ${item.icon || "📰"}
+        </div>
+        `
+      }
+
+      <div class="news-content">
+
+        <span class="news-tag">
+          ${formatNewsType(item.type)}
+        </span>
+
+        <div class="news-date">
+          📅 ${item.date}
+        </div>
+
+        <h3>
+          ${item.title}
+        </h3>
+
+        <p>
+          ${item.description}
+        </p>
+
+        <div class="news-author">
+          Published by ${item.author}
+        </div>
+
+        <div class="news-actions">
+
+  <button
+    class="news-read"
+    onclick="readNewsById(${item.databaseId || 0}, '${item.title.replace(/'/g,"\\'")}')"
+  >
+    Read More
+  </button>
+
+  ${
+    item.databaseId
+    ?
+    `
+    <button
+      class="news-edit"
+      onclick="editNews(${item.databaseId})"
+    >
+      ✏️ Edit
+    </button>
+
+    <button
+      class="news-delete"
+      onclick="deleteNews(${item.databaseId})"
+    >
+      🗑 Delete
+    </button>
+    `
+    :
+    ""
+  }
+
+</div>
+
+      </div>
+
+    </article>
+
+  `).join("");
+}
+// ==========================================
+// DELETE NEWS
+// ==========================================
+
+async function deleteNews(newsId){
+
+  const confirmed=confirm(
+    "Are you sure you want to delete this post?\n\nThe uploaded poster/photo will also be deleted."
+  );
+
+  if(!confirmed){
+    return;
+  }
+
+  try{
+
+    const response=await fetch(
+      `/api/news/${newsId}`,
+      {
+        method:"DELETE"
+      }
+    );
+
+    const result=await response.json();
+
+    if(response.ok && result.success){
+
+      alert("✓ Post deleted successfully.");
+
+      await loadDatabaseNews();
+
+    }else{
+
+      alert(
+        result.message ||
+        "Unable to delete the post."
+      );
+
+    }
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      "Unable to connect to the server."
+    );
+
+  }
+}
+
+function formatNewsType(type){
+  const names={
+    announcement:"Announcement",
+    event:"Event",
+    achievement:"Achievement",
+    spotlight:"Student Spotlight"
+  };
+
+  return names[type]||"FREEVERSE";
+}
+
+function filterNews(type,button){
+  document.querySelectorAll(".news-filter").forEach(btn=>{
+    btn.classList.remove("active");
+  });
+
+  if(button){
+    button.classList.add("active");
+  }
+
+  if(type==="all"){
+    renderNews(freeverseNews);
+  }else{
+    renderNews(
+      freeverseNews.filter(item=>item.type===type)
+    );
+  }
+}
+
+function readNewsByTitle(title){
+  const item=freeverseNews.find(news=>news.title===title);
+
+  if(!item)return;
+
+  const modal=document.createElement("div");
+  modal.className="news-detail-modal";
+
+  modal.innerHTML=`
+    <div class="news-detail-box">
+
+      <button class="news-detail-close"
+        onclick="this.closest('.news-detail-modal').remove()">
+        ×
+      </button>
+
+      <div class="news-detail-icon">${item.icon}</div>
+
+      <span class="news-tag">
+        ${formatNewsType(item.type)}
+      </span>
+
+      <h2>${item.title}</h2>
+
+      <div class="news-date">
+        📅 ${item.date}
+      </div>
+
+      <p>${item.description}</p>
+
+      <button class="news-read"
+        onclick="this.closest('.news-detail-modal').remove()">
+        Close
+      </button>
+
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+  renderNews();
+});
+// ==========================================
+// OPEN EDIT NEWS MODAL
+// ==========================================
+
+async function editNews(newsId){
+
+  try{
+
+    const response=await fetch("/api/news");
+
+    if(!response.ok){
+
+      alert("Unable to load the post.");
+
+      return;
+
+    }
+
+    const newsList=await response.json();
+
+    const item=newsList.find(
+      news=>news.id===newsId
+    );
+
+    if(!item){
+
+      alert("Post not found.");
+
+      return;
+
+    }
+
+    // Fill hidden ID
+    document.getElementById(
+      "editNewsId"
+    ).value=item.id;
+
+    // Fill title
+    document.getElementById(
+      "editPostTitle"
+    ).value=item.title;
+
+    // Fill category
+    document.getElementById(
+      "editPostType"
+    ).value=item.category;
+
+    // Fill description
+    document.getElementById(
+      "editPostDescription"
+    ).value=item.description;
+
+    // Show current image
+    const currentImage=
+      document.getElementById(
+        "editCurrentImage"
+      );
+
+    if(item.image){
+
+      currentImage.classList.remove("empty");
+
+      currentImage.innerHTML=`
+        <img
+          src="/static/${item.image}"
+          alt="Current poster"
+        >
+      `;
+
+    }else{
+
+      currentImage.classList.add("empty");
+
+      currentImage.innerHTML=
+        "No poster or photo uploaded.";
+
+    }
+
+    // Clear previous preview
+    const preview=
+      document.getElementById(
+        "editImagePreview"
+      );
+
+    preview.innerHTML="";
+    preview.style.display="none";
+
+    // Clear message
+    const message=
+      document.getElementById(
+        "editNewsMessage"
+      );
+
+    message.textContent="";
+    message.className=
+      "edit-news-message";
+
+    // Open modal
+    const modal=
+      document.getElementById(
+        "editNewsModal"
+      );
+
+    modal.classList.add("show");
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      "Unable to connect to the server."
+    );
+
+  }
+
+}
+// ==========================================
+// CLOSE EDIT NEWS MODAL
+// ==========================================
+
+function closeEditNewsModal(){
+
+  const modal=
+    document.getElementById(
+      "editNewsModal"
+    );
+
+  if(modal){
+
+    modal.classList.remove("show");
+
+  }
+
+}
+// ==========================================
+// EDIT NEWS FORM SUBMIT
+// ==========================================
+
+const editNewsForm=document.getElementById(
+  "editNewsForm"
+);
+
+if(editNewsForm){
+
+  editNewsForm.addEventListener(
+    "submit",
+    async function(e){
+
+      e.preventDefault();
+
+      const newsId=document.getElementById(
+        "editNewsId"
+      ).value;
+
+      const title=document.getElementById(
+        "editPostTitle"
+      ).value.trim();
+
+      const category=document.getElementById(
+        "editPostType"
+      ).value;
+
+      const description=document.getElementById(
+        "editPostDescription"
+      ).value.trim();
+
+      const imageInput=document.getElementById(
+        "editPostImage"
+      );
+
+      const message=document.getElementById(
+        "editNewsMessage"
+      );
+
+      if(!title || !category || !description){
+
+        message.textContent=
+          "Please fill in all required fields.";
+
+        message.className=
+          "edit-news-message error";
+
+        return;
+
+      }
+
+      try{
+
+        const formData=new FormData();
+
+        formData.append(
+          "title",
+          title
+        );
+
+        formData.append(
+          "category",
+          category
+        );
+
+        formData.append(
+          "description",
+          description
+        );
+
+        // Add new image only if selected
+        if(
+          imageInput &&
+          imageInput.files.length>0
+        ){
+
+          formData.append(
+            "image",
+            imageInput.files[0]
+          );
+
+        }
+
+        const response=await fetch(
+          `/api/news/${newsId}`,
+          {
+            method:"PUT",
+            body:formData
+          }
+        );
+
+        const result=
+          await response.json();
+
+        if(
+          response.ok &&
+          result.success
+        ){
+
+          message.textContent=
+            "✓ Post updated successfully!";
+
+          message.className=
+            "edit-news-message success";
+
+          await loadDatabaseNews();
+
+          setTimeout(()=>{
+
+            closeEditNewsModal();
+
+          },1000);
+
+        }else{
+
+          message.textContent=
+            result.message ||
+            "Unable to update post.";
+
+          message.className=
+            "edit-news-message error";
+
+        }
+
+      }catch(error){
+
+        console.error(error);
+
+        message.textContent=
+          "Unable to connect to the server.";
+
+        message.className=
+          "edit-news-message error";
+
+      }
+
+    }
+  );
+
+}
+// ==========================================
+// EDIT IMAGE PREVIEW
+// ==========================================
+
+const editPostImage=document.getElementById(
+  "editPostImage"
+);
+
+const editImagePreview=document.getElementById(
+  "editImagePreview"
+);
+
+if(editPostImage){
+
+  editPostImage.addEventListener(
+    "change",
+    function(){
+
+      const file=this.files[0];
+
+      if(!file){
+
+        editImagePreview.innerHTML="";
+        editImagePreview.style.display="none";
+
+        return;
+
+      }
+
+      if(!file.type.startsWith("image/")){
+
+        alert(
+          "Please select an image file."
+        );
+
+        this.value="";
+
+        return;
+
+      }
+
+      const reader=new FileReader();
+
+      reader.onload=function(e){
+
+        editImagePreview.innerHTML=`
+          <img
+            src="${e.target.result}"
+            alt="New poster preview"
+          >
+        `;
+
+        editImagePreview.style.display=
+          "block";
+
+      };
+
+      reader.readAsDataURL(file);
+
+    }
+  );
+
+}
+// ===== COORDINATOR POST SYSTEM =====
+
+const newsPostForm=document.getElementById("newsPostForm");
+
+async function loadDatabaseNews(){
+
+  try{
+
+    const response=await fetch("/api/news");
+
+    if(!response.ok)return;
+
+    const databaseNews=await response.json();
+
+    const formattedNews=databaseNews.map(item=>({
+      type:item.category,
+      title:item.title,
+      date:item.date,
+      icon:getNewsIcon(item.category),
+      description:item.description,
+      author:item.author,
+      image:item.image,
+      databaseId:item.id
+    }));
+
+    renderNews([
+      ...formattedNews,
+      ...freeverseNews
+    ]);
+
+  }catch(error){
+
+    console.log(
+      "News database could not be loaded:",
+      error
+    );
+
+  }
+}
+
+
+if(newsPostForm){
+
+  newsPostForm.addEventListener(
+    "submit",
+    async function(e){
+
+      e.preventDefault();
+
+      const title=document.getElementById(
+        "postTitle"
+      ).value.trim();
+
+      const category=document.getElementById(
+        "postType"
+      ).value;
+
+      const description=document.getElementById(
+        "postDescription"
+      ).value.trim();
+
+      const imageInput=document.getElementById(
+        "postImage"
+      );
+
+      const success=document.getElementById(
+        "postSuccess"
+      );
+
+      if(!title || !category || !description){
+
+        success.textContent=
+          "Please fill in all required fields.";
+
+        success.style.display="block";
+
+        return;
+      }
+
+      try{
+
+        const formData=new FormData();
+
+        formData.append(
+          "title",
+          title
+        );
+
+        formData.append(
+          "category",
+          category
+        );
+
+        formData.append(
+          "description",
+          description
+        );
+
+        if(
+          imageInput &&
+          imageInput.files.length>0
+        ){
+
+          formData.append(
+            "image",
+            imageInput.files[0]
+          );
+
+        }
+
+        const response=await fetch(
+          "/api/news",
+          {
+            method:"POST",
+            body:formData
+          }
+        );
+
+        const result=await response.json();
+
+        if(response.ok && result.success){
+
+          newsPostForm.reset();
+
+          const imagePreview=
+            document.getElementById(
+              "imagePreview"
+            );
+
+          if(imagePreview){
+
+            imagePreview.innerHTML="";
+            imagePreview.style.display="none";
+
+          }
+
+          success.textContent=
+            "✓ Update published successfully!";
+
+          success.style.display="block";
+
+          await loadDatabaseNews();
+
+          setTimeout(()=>{
+
+            success.style.display="none";
+
+          },3000);
+
+          document.getElementById(
+            "news"
+          ).scrollIntoView({
+            behavior:"smooth"
+          });
+
+        }else{
+
+          success.textContent=
+            result.message ||
+            "Unable to publish update.";
+
+          success.style.display="block";
+
+        }
+
+      }catch(error){
+
+        console.error(error);
+
+        success.textContent=
+          "Server connection error.";
+
+        success.style.display="block";
+
+      }
+
+    }
+  );
+
+}
+
+
+function getNewsIcon(type){
+
+  const icons={
+    announcement:"📢",
+    event:"🎯",
+    achievement:"🏆",
+    spotlight:"🌟"
+  };
+
+  return icons[type]||"📰";
+}
+
+
+document.addEventListener(
+  "DOMContentLoaded",
+  ()=>{
+    loadDatabaseNews();
+  }
+);
+// ===== COORDINATOR LOGIN =====
+
+const coordinatorLoginForm=document.getElementById(
+  "coordinatorLoginForm"
+);
+
+async function checkCoordinatorLogin(){
+
+  try{
+
+    const response=await fetch("/api/coordinator-status");
+    const data=await response.json();
+
+    const postPanel=document.getElementById("coordinator-post");
+
+    if(data.logged_in && postPanel){
+
+      postPanel.classList.add("authorized");
+
+    }
+
+  }catch(error){
+
+    console.log("Coordinator status check failed:",error);
+
+  }
+}
+
+
+if(coordinatorLoginForm){
+
+  coordinatorLoginForm.addEventListener(
+    "submit",
+    async function(e){
+
+      e.preventDefault();
+
+      const email=document.getElementById(
+        "coordinatorEmail"
+      ).value.trim();
+
+      const password=document.getElementById(
+        "coordinatorPassword"
+      ).value;
+
+      const message=document.getElementById(
+        "coordinatorLoginMessage"
+      );
+
+      try{
+
+        const response=await fetch(
+          "/coordinator-login",
+          {
+            method:"POST",
+            headers:{
+              "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+              email:email,
+              password:password
+            })
+          }
+        );
+
+        const data=await response.json();
+
+        if(data.success){
+
+          message.textContent="✓ Coordinator login successful!";
+          message.className=
+            "coordinator-login-message success";
+
+          const postPanel=document.getElementById(
+            "coordinator-post"
+          );
+
+          if(postPanel){
+
+            postPanel.classList.add("authorized");
+
+            setTimeout(()=>{
+
+              postPanel.scrollIntoView({
+                behavior:"smooth"
+              });
+
+            },500);
+
+          }
+
+        }else{
+
+          message.textContent=
+            data.message || "Invalid login details.";
+
+          message.className=
+            "coordinator-login-message error";
+
+        }
+
+      }catch(error){
+
+        console.error(error);
+
+        message.textContent=
+          "Unable to connect to the server.";
+
+        message.className=
+          "coordinator-login-message error";
+
+      }
+
+    }
+  );
+
+}
+
+
+document.addEventListener(
+  "DOMContentLoaded",
+  ()=>{
+    checkCoordinatorLogin();
+  }
+);
+// ===== POST IMAGE PREVIEW =====
+
+const postImage=document.getElementById("postImage");
+const imagePreview=document.getElementById("imagePreview");
+
+if(postImage){
+
+  postImage.addEventListener("change",function(){
+
+    const file=this.files[0];
+
+    if(!file){
+      imagePreview.innerHTML="";
+      imagePreview.style.display="none";
+      return;
+    }
+
+    if(!file.type.startsWith("image/")){
+      alert("Please select an image file.");
+      this.value="";
+      return;
+    }
+
+    const reader=new FileReader();
+
+    reader.onload=function(e){
+
+      imagePreview.innerHTML=`
+        <img src="${e.target.result}" alt="Selected poster preview">
+      `;
+
+      imagePreview.style.display="block";
+    };
+
+    reader.readAsDataURL(file);
+
+  });
+
+}
+// ==========================================
+// STUDENT FREELANCER REGISTRATION
+// ==========================================
+
+const freelancerRegisterForm =
+  document.getElementById("freelancerRegisterForm");
+
+if (freelancerRegisterForm) {
+
+  freelancerRegisterForm.addEventListener(
+    "submit",
+    async function(e) {
+
+      e.preventDefault();
+
+      const formData = new FormData();
+
+      formData.append(
+        "name",
+        document.getElementById("freelancerName").value.trim()
+      );
+
+      formData.append(
+        "year",
+        document.getElementById("freelancerYear").value
+      );
+
+      formData.append(
+        "department",
+        document.getElementById("freelancerDepartment").value.trim()
+      );
+
+      formData.append(
+        "role",
+        document.getElementById("freelancerRole").value
+      );
+
+      formData.append(
+        "skills",
+        document.getElementById("freelancerSkills").value.trim()
+      );
+
+      formData.append(
+        "projects",
+        document.getElementById("freelancerProjects").value.trim()
+      );
+
+      formData.append(
+        "email",
+        document.getElementById("freelancerEmail").value.trim()
+      );
+
+      formData.append(
+        "linkedin",
+        document.getElementById("freelancerLinkedin").value.trim()
+      );
+
+      formData.append(
+        "portfolio",
+        document.getElementById("freelancerPortfolio").value.trim()
+      );
+
+      const imageInput =
+        document.getElementById("freelancerImage");
+
+      if (
+        imageInput &&
+        imageInput.files.length > 0
+      ) {
+        formData.append(
+          "image",
+          imageInput.files[0]
+        );
+      }
+
+      const message =
+        document.getElementById(
+          "freelancerRegisterMessage"
+        );
+
+      try {
+
+        const response = await fetch(
+          "/api/freelancers",
+          {
+            method: "POST",
+            body: formData
+          }
+        );
+
+        const result =
+          await response.json();
+
+        if (
+          response.ok &&
+          result.success
+        ) {
+
+          message.textContent =
+            "✓ Profile submitted successfully! Waiting for coordinator approval.";
+
+          message.className =
+            "freelancer-register-message success";
+
+          freelancerRegisterForm.reset();
+
+        } else {
+
+          message.textContent =
+            result.message ||
+            "Unable to submit profile.";
+
+          message.className =
+            "freelancer-register-message error";
+        }
+
+      } catch (error) {
+
+        console.error(error);
+
+        message.textContent =
+          "Unable to connect to the server.";
+
+        message.className =
+          "freelancer-register-message error";
+      }
+
+    }
+  );
+
+}
